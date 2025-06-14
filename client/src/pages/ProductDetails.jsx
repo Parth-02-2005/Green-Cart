@@ -1,37 +1,41 @@
 import React from 'react'
+import { useAppContext } from '../context/AppContext';
+import { Link, useParams } from 'react-router-dom';
 
 const ProductDetails = () => {
 
-    const product = {
-        name: "Casual Shoes",
-        category: "Sports",
-        price: 100,
-        offerPrice: 80,
-        rating: 4,
-        images: [
-            "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage.png",
-            "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage2.png",
-            "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage3.png",
-            "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png"
-        ],
-        description: [
-            "High-quality material",
-            "Comfortable for everyday use",
-            "Available in different sizes"
-        ]
-    };
+    const { Products, navigate, currency, addToCart }  = useAppContext();
+    const { id } = useParams();
 
-    const [thumbnail, setThumbnail] = React.useState(product.images[0]);
+    const [relatedProducts, setRelatedProducts] = React.useState(product.images[0]);
+    const [thumbnail, setThumbnail] = React.useState(null);
 
 
+    const product = Products.find((item) => item._id === id)
+
+    useEffect(() => {
+      if(product.length > 0) {
+
+        let productsCopy = Products.slice();
+        productsCopy = productsCopy.filter((item) => product.category === item.category);
+
+        setRelatedProducts(productsCopy.slice(0, 5))
+      }
+    }, [Products])
+
+    useEffect(() => {
+      setThumbnail(product.image[0] ? product.image[0] : null);
+    }, [product])
+    
+    
   return product && (
     <div>
 
-        <div className="max-w-6xl w-full px-6">
+        <div className="mt-12">
             <p>
-                <span>Home</span> /
-                <span> Products</span> /
-                <span> {product.category}</span> /
+                <Link to={'/'}>Home</Link> /
+                <Link to={'/products'}> Products</Link> /
+                <Link to={`/products/${product.category.toLowerCase()}`}> {product.category}</Link> /
                 <span className="text-indigo-500"> {product.name}</span>
             </p>
 
