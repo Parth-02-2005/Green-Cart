@@ -3,7 +3,7 @@ import { isAuth, login, logout, register } from '../controllers/userController.j
 import authUser from '../middleware/authUser.js';
 
 const userRouter = express.Router();
-
+// routes for user 
 userRouter.post('/register', register);
 userRouter.post('/login', login);
 userRouter.get('/is-auth', authUser, isAuth);
